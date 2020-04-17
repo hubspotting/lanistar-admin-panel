@@ -2,9 +2,9 @@ export default {
   msLandingUrl:
     process.env.NODE_ENV == "development"
       ? "http://localhost:5001" : (
-        process.env.NODE_ENV == "staging" ?
-        "https://lanistar-api-server.herokuapp.com" :
-        "https://landing-api.iamlanistar.com"
+        process.env.NODE_ENV != "staging" ?
+        "https://landing-api.iamlanistar.com" :
+        "https://lanistar-api-server.herokuapp.com"
       ),
   contractStatuses: [
     { label: 'Waiting to be contacted', value: 0 },

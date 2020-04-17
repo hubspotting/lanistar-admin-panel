@@ -5,10 +5,10 @@
   "author": "Orhan",
   "private": true,
   "scripts": {
-    "dev": "set NODE_ENV=development && nuxt",
+    "dev": "NODE_ENV=development nuxt",
     "prebuild": "rimraf dist",
-    "build:prod": "set NODE_ENV=production && nuxt build",
-    "build": "set NODE_ENV=staging && nuxt build",
+    "build:prod": "NODE_ENV=production nuxt build",
+    "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "test": "jest",

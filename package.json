@@ -1,0 +1,36 @@
+{
+  "name": "wa-influencer-management",
+  "version": "1.0.0",
+  "description": "influencer management back office web app",
+  "author": "Orhan",
+  "private": true,
+  "scripts": {
+    "dev": "set NODE_ENV=development && nuxt",
+    "prebuild": "rimraf dist",
+    "build": "set NODE_ENV=production && nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "test": "jest",
+    "deploy": "aws s3 sync dist s3://inf-admin.iamlanistar.com/ --delete",
+    "clear:cache": "aws cloudfront create-invalidation --distribution-id=E33Q1FHUK5UMGG --paths='/'"
+  },
+  "dependencies": {
+    "@nuxtjs/auth": "^4.9.0",
+    "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/dotenv": "^1.4.0",
+    "@sentry/browser": "^5.15.0",
+    "@sentry/integrations": "^5.15.0",
+    "nuxt": "^2.0.0",
+    "vuejs-paginate": "^2.1.0",
+    "vuelidate": "^0.7.5",
+    "vuetify-datetime-picker": "^2.1.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.0.0",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "babel-jest": "^24.1.0",
+    "jest": "^24.1.0",
+    "rimraf": "^3.0.2",
+    "vue-jest": "^4.0.0-0"
+  }
+}

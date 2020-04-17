@@ -7,6 +7,9 @@ export default {
     port: 3100 // default: 3000
     // host: '0.0.0.0' // default: localhost
   },
+  env:{
+    NODE_ENV: process.env.NODE_ENV
+  },
   /*
    ** Headers of the page
    */

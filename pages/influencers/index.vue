@@ -3,9 +3,9 @@
   <v-layout column>
     <h1>Influencers</h1>
     <v-row class="filter">
-      <v-col cols="12" md="3">
+      <v-col cols="12" md="6">
         <div class="search-wrapper">
-          <input type="text" v-model="searchClue" v-on:change="callback" placeholder="Search by name"/>
+          <input type="text" v-model="searchClue" v-on:change="callback" placeholder="Search by name, email or phone number"/>
           <label>Search by name</label>
         </div>
       </v-col>
@@ -57,7 +57,43 @@
     </v-dialog>
   </v-layout>
 </template>
-
+<style lang="scss" scoped>
+.search-wrapper {
+    position: relative;
+    text-align: center;
+    label {
+      position: absolute;
+      font-size: 12px;
+      color: rgba(0,0,0,.50);
+      top: 8px;
+      left: 12px;
+      z-index: -1;
+      transition: .15s all ease-in-out;
+    }
+    input {
+      width: 80%;
+      padding: 4px 12px;
+      color: rgba(0,0,0,.70);
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 4px;
+      transition: .15s all ease-in-out;
+      background: white;
+      &:focus {
+        outline: none;
+        transform: scale(1.05);
+        & + label  {
+          font-size: 10px;
+          transform: translateY(-24px) translateX(-12px);
+        }
+      }
+      &::-webkit-input-placeholder {
+          font-size: 12px;
+          color: rgba(0,0,0,.50);
+          font-weight: 100;
+      }
+    }
+  }
+</style>
 <script>
 import axios from "../../utils/create-axios";
 import config from "../../config";

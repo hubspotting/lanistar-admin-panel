@@ -152,9 +152,9 @@
           <v-card-title v-if="filterType == 9">{{ stats.notverified ? stats.notverified: 'No one' }} Unverified</v-card-title>
 
           <v-row class="filter">
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="6">
               <div class="search-wrapper">
-                <input type="text" v-model="searchClue" v-on:change="callback" placeholder="Search by name"/>
+                <input type="text" v-model="searchClue" v-on:change="callback" placeholder="Search by name, email or phone number"/>
                 <label>Search by name</label>
               </div>
             </v-col>
@@ -227,6 +227,7 @@
       transition: .15s all ease-in-out;
     }
     input {
+      width: 80%;
       padding: 4px 12px;
       color: rgba(0,0,0,.70);
       border: 1px solid rgba(0,0,0,.12);

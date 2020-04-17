@@ -7,7 +7,7 @@
       app
       permanent
     >
-      <v-list>
+      <v-list v-on:refresh="getSocialData">
         <v-list-item
           v-for="(item, i) in items"
           :key="i"
@@ -20,6 +20,22 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item
+          v-for="(item, key) in cards"
+          :key="key"
+          :class="key"
+        >
+          <v-list-item-action>
+            <v-icon class="color-white">{{ icons[key] }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <div class="d-flex flex-column justify-center align-tems-center">
+              <div class="color-white">Total: {{ item.total ? item.total: 0 }}</div>
+              <div class="color-white">Avg: {{ item.avg ? item.avg : 0 }}</div>
+            </div>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -62,7 +78,36 @@
   </v-app>
 </template>
 
+<style lang="scss" scoped>
+.twitter {
+  background-color: #2196F3 !important;
+  border-color: #2196F3 !important;
+}
+.youtube {
+  background-color: #F44336 !important;
+  border-color: #F44336 !important;
+}
+.facebook {
+  background-color: #303f9f !important;
+  border-color: #303f9f !important;
+}
+.tiktok {
+  background-color: #1E1E1E;
+  border-color: #1E1E1E;
+  
+}
+.instagram {
+  background-color: #e91e63 !important;
+  border-color: #e91e63 !important;
+}
+.color-white {
+  color: white !important;
+}
+</style>
+
 <script>
+import axios from '../utils/create-axios';
+import config from '../config';
 export default {
   data () {
     return {
@@ -91,16 +136,62 @@ export default {
           to: '/influencers/invite'
         }
       ],
+      icons: {
+        instagram: 'mdi-instagram',
+        facebook: 'mdi-facebook',
+        twitter: 'mdi-twitter',
+        youtube: 'mdi-youtube',
+        tiktok: 'mdi-at'
+      },
+
+      cards: {
+        instagram: {
+          total: 0,
+          avg: 0,
+        },
+        facebook: {
+          total: 0,
+          avg: 0,
+        },
+        twitter: {
+          total: 0,
+          avg: 0,
+        },
+        youtube: {
+          total: 0,
+          avg: 0,
+        },
+        tiktok: {
+          total: 0,
+          avg: 0,
+        }
+      },
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Lanistar Influencers'
+      title: 'Lanistar Influencers',
     }
   },
   mounted() {
+    this.$bus.$on('refresh', () => {
+      this.getSocialData();
+    })
+    this.getSocialData();
     this.miniVariant = this.$vuetify.breakpoint.mdAndDown
   },
   methods: {
+    async getSocialData() {
+      try {
+          const url = `${config.msLandingUrl}/influencer/socialfollowers`;
+          const result = await axios.get(url);
+          if (result && result.data) {
+            console.log(result.data);
+            this.cards = result.data;
+          }
+        } catch (error) {
+          console.log(error)
+        }
+    },
     onResize() {
       // this.miniVariant = this.$vuetify.breakpoint.mdAndDown
     },

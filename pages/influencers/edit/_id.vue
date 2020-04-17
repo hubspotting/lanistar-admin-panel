@@ -92,7 +92,8 @@ export default {
           }
           this.successMessage = true
           setTimeout(() => {
-            this.$nuxt.$router.replace('/influencers')
+            this.$nuxt.$router.replace('/influencers');
+            this.$bus.$emit('refresh')
           }, 1000)
         }
       } catch (error) {

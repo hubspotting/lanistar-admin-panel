@@ -51,7 +51,10 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["plugins/sentry.js"],
+  plugins: [
+    "plugins/sentry.js",
+    "plugins/bus.js"
+  ],
   /*
    ** Nuxt.js dev-modules
    */

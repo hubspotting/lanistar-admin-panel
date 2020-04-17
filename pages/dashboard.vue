@@ -140,83 +140,6 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-row>
-            <v-col cols="12" md="4">
-                <v-card color="blue" dark >
-                  <div class="d-flex flex-no-wrap justify-space-between">
-                    <div>
-                      <v-card-text class="card-count">
-                        <h3>Tot Twitt Fol: {{ followersData.twitter_total_followers }}</h3>
-                        <h3>Avg Twitt Fol: {{ followersData.twitter_average_followers }}</h3>
-                      </v-card-text>
-                    </div>
-                    <div class="card-icon d-flex flex-column justify-center align-tems-center">
-                      <i class="fa fa-twitter" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </v-card>
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-card color="indigo darken-2" dark >
-                  <div class="d-flex flex-no-wrap justify-space-between">
-                    <div>
-                      <v-card-text class="card-count">
-                        <h3>Tot FB Fol: {{ followersData.facebook_total_followers }}</h3>
-                        <h3>Avg FB Fol: {{ followersData.facebook_average_followers }}</h3>
-                      </v-card-text>
-                    </div>
-                    <div class="card-icon d-flex flex-column justify-center align-tems-center">
-                      <i class="fa fa-facebook" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </v-card>
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-card color="red" dark >
-                  <div class="d-flex flex-no-wrap justify-space-between">
-                    <div>
-                      <v-card-text class="card-count">
-                        <h3>Tot You Fol: {{ followersData.youtube_total_followers }}</h3>
-                        <h3>Avg You Fol: {{ followersData.youtube_average_followers }}</h3>
-                      </v-card-text>
-                    </div>
-                    <div class="card-icon d-flex flex-column justify-center align-tems-center">
-                      <i class="fa fa-youtube" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </v-card>
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-card color="pink" dark >
-                  <div class="d-flex flex-no-wrap justify-space-between">
-                    <div>
-                      <v-card-text class="card-count">
-                        <h3>Tot Insta Fol: {{ followersData.instagram_total_followers }}</h3>
-                        <h3>Avg Insta Fol: {{ followersData.instagram_average_followers }}</h3>
-                      </v-card-text>
-                    </div>
-                    <div class="card-icon d-flex flex-column justify-center align-tems-center">
-                      <i class="fa fa-instagram" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </v-card>
-            </v-col>
-            <v-col cols="12" md="4">
-                <v-card color="black" dark >
-                  <div class="d-flex flex-no-wrap justify-space-between">
-                    <div>
-                      <v-card-text class="card-count">
-                        <h3>Tot Tiktok Fol: {{ followersData.tiktok_total_followers }}</h3>
-                        <h3>Avg Tiktok Fol: {{ followersData.tiktok_average_followers }}</h3>
-                      </v-card-text>
-                    </div>
-                    <div class="card-icon d-flex flex-column justify-center align-tems-center">
-                      <i class="fa fa-at" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </v-card>
-            </v-col>
-          </v-row>
            
           <v-card-title v-if="filterType == 1">{{ stats.total ? stats.total: 'No one' }} Registered</v-card-title>
           <v-card-title v-if="filterType == 2">{{ stats.referred ? 'Top Referrers': 'No one Referred' }}</v-card-title>
@@ -227,7 +150,6 @@
           <v-card-title v-if="filterType == 7">{{ stats.signed ? stats.signed: 'No one' }} Contract Signed</v-card-title>
           <v-card-title v-if="filterType == 8">{{ stats.notSigned ? stats.notSigned: 'No one' }} Contract Not Signed</v-card-title>
           <v-card-title v-if="filterType == 9">{{ stats.notverified ? stats.notverified: 'No one' }} Unverified</v-card-title>
-
 
           <v-row class="filter">
             <v-col cols="12" md="3">
@@ -347,7 +269,6 @@ export default {
       paginateNum: 1,
       searchClue: '',
       totalPageNum: 0,
-      followersData: {},
       assignedToCases: config.assignFilterCases,
       assignedto : -1
     }
@@ -355,7 +276,6 @@ export default {
   async mounted() {
     await this.getDashboardData()
     await this.getInfluencers()
-    await this.getSocialData();
   },
   computed: {
       
@@ -364,7 +284,7 @@ export default {
     refreshData() {
       this.getDashboardData();
       this.getInfluencers();
-      this.getSocialData();
+      
     },
     callback() {
       this.paginateNum = 1;
@@ -375,17 +295,7 @@ export default {
       this.paginateNum = 1;
       this.getInfluencers();
     },
-    async getSocialData() {
-      try {
-          const url = `${config.msLandingUrl}/influencer/socialfollowers`;
-          const result = await axios.get(url);
-          if (result && result.data) {
-            this.followersData = result.data;
-          }
-        } catch (error) {
-          console.log(error)
-        }
-    },
+    
     async getDashboardData() {
       try {
         const url = `${config.msLandingUrl}/influencer/dashboard`;

@@ -410,7 +410,6 @@ export default {
     },
 
     handleSubmit() {
-      alert(this.createdAt.toISOString());
       this.$v.$touch()
       if (this.$v.$invalid) {
         return
@@ -448,7 +447,7 @@ export default {
         youtube_followers: Number(this.youtube_followers),
         tiktok_followers: Number(this.tiktok_followers),
         assignedto: Number(this.assignedto)
-      })
+      });
     },
     handleCancel() {
       this.cancelCallback()

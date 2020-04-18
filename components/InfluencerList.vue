@@ -85,7 +85,7 @@
                       item-text="label"
                       item-value="value"
                       auto-select-first
-                      v-on:change="changeStatusById(item.id, item.contractStatus, 'contractStatus')"
+                      v-on:change="changeStatusById(item.id, item.assignedto,'contractStatus')"
                     ></v-select>
                       <!-- {{ config.contractStatuses[item.contractStatus].label }} -->
                   </td>
@@ -128,6 +128,37 @@
         </v-row> -->
       </template>
     </v-data-iterator>
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title></v-card-title>
+        <v-card-text>
+          Are you going to set {{ tempItem.firstName + ' ' + tempItem.lastName }} status to {{ contractStatuses[tempItem.contractStatus]['label'] }}?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="red darken-1"
+            text
+            @click="dialog = false"
+          >
+            No
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="changeStatusById(tempItem.id, tempItem.contractStatus, 'contractStatus')"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -196,15 +227,30 @@ export default {
       config,
       search: '',
       contractStatuses: config.contractStatuses,
-      assignedToCases: config.assignedToCases
+      assignedToCases: config.assignedToCases,
+      dialog: false,
+      tempItem: {
+        firstName: '',
+        lastName: '',
+        contractStatus: 0
+
+      }
     }
   },
   methods: {
+    confirm(item, beforeItem) {
+      console.log(item, beforeItem);
+      this.tempItem = item;
+      this.dialog = true;
+    },
     convertCreatedAt(createdAt) {
       let temp = new Date(createdAt);
       return `${temp.getDate()}-${temp.getMonth() + 1}-${temp.getFullYear()} ${temp.getHours()}:${temp.getMinutes()}`;
     },
     async changeStatusById(id, changedValue, changeFilter) {
+      if (this.dialog) {
+        this.dialog = false;
+      }
       const url = `${config.msLandingUrl}/influencer/statusChange`;
       axios.post(url, {
         userId: id,

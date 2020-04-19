@@ -540,7 +540,7 @@ export default {
     foundItems() {
       return this.searchResults.map((item) => {
         return {
-          label: `${item.firstName} ${item.lastName} < ${item.email} >`,
+          label: `${item.firstName} ${item.lastName} < ${item.email} > < ${item.phoneNumber} >`,
           ...item
         }
       })

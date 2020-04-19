@@ -456,17 +456,17 @@ export default {
       if (!this.referredBy) {
         return null;
       }
-        this.isSearching = true
+      this.isSearching = true;
       try {
         const url = `${config.msLandingUrl}/influencer/info/${this.referredBy}`;
         const result = await axios.get(url);
         if (result && result.data) {
-          this.referredByInfo = result.data.profileInfo
+          this.referredByInfo = result.data.profileInfo;
         }
       } catch (error) {
         console.log(error)
       }
-      this.isSearching = false
+      this.isSearching = false;
     }
   },
   watch: {
@@ -484,9 +484,8 @@ export default {
           const url = `${config.msLandingUrl}/influencer/list`;
           const result = await axios.get(url, {
             params: {
-              firstName: val,
-              lastName: val,
-              email: val
+              searchClue: val,
+              autoComplete: true
             }
           });
           if (result && result.data) {

@@ -219,7 +219,7 @@
             clearable
             item-text="label"
             item-value="influencerId"
-            placeholder="Influencer name, surname or email"
+            placeholder="Influencer name, email or phone number"
             prepend-icon="mdi-database-search"
             return-object
           >
@@ -484,7 +484,7 @@ export default {
           const url = `${config.msLandingUrl}/influencer/list`;
           const result = await axios.get(url, {
             params: {
-              searchClue: val,
+              searchClue: val.toLowerCase(),
               autoComplete: true
             }
           });

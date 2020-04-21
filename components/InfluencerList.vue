@@ -85,7 +85,7 @@
                       item-text="label"
                       item-value="value"
                       auto-select-first
-                      v-on:change="changeStatusById(item.id, item.assignedto,'contractStatus')"
+                      v-on:change="changeStatusById(item.id, item.contractStatus,'contractStatus')"
                     ></v-select>
                       <!-- {{ config.contractStatuses[item.contractStatus].label }} -->
                   </td>

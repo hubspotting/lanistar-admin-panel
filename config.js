@@ -18,13 +18,17 @@ export default {
     { label: 'Not assigned yet', value: 0 },
     { label: 'Carol', value: 1 },
     { label: 'Mohanned', value: 2 },
-    { label: 'Amani', value: 3 }
+    { label: 'Amani', value: 3 },
+    { label: 'Melek', value: 4 },
+    { label: 'Jodie', value: 5 }
   ],
   assignFilterCases: [
       { label: 'All', value: -1 },
       { label: 'Not assigned yet', value: 0 },
       { label: 'Carol', value: 1 },
       { label: 'Mohanned', value: 2 },
-      { label: 'Amani', value: 3 }
+      { label: 'Amani', value: 3 },
+      { label: 'Melek', value: 4 },
+    { label: 'Jodie', value: 5 }
   ]
 };

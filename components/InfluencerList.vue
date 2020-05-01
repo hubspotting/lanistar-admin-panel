@@ -5,12 +5,6 @@
       :items-per-page.sync="itemsPerPage"
       hide-default-footer>
       <template v-slot:header>
-        <!-- <v-toolbar class="mb-2"
-          color="indigo darken-5"
-          dark flat
-          v-if="!noHeader">
-          <v-toolbar-title>Influencers</v-toolbar-title>
-        </v-toolbar> -->
       </template>
       <template v-slot:no-data>
         <v-alert color="warning" class="pa-3" dense text>
@@ -76,7 +70,6 @@
                       auto-select-first
                       v-on:change="changeStatusById(item.id, item.assignedto,'assignedto')"
                     ></v-select>
-                      <!-- {{ config.contractStatuses[item.contractStatus].label }} -->
                   </td>
                   <td>
                     <v-select
@@ -87,7 +80,6 @@
                       auto-select-first
                       v-on:change="changeStatusById(item.id, item.contractStatus,'contractStatus')"
                     ></v-select>
-                      <!-- {{ config.contractStatuses[item.contractStatus].label }} -->
                   </td>
                   <td>
                     <v-tooltip bottom>
@@ -116,16 +108,6 @@
             </tbody>
           </template>
         </v-simple-table>
-        <!-- <v-row>
-          <v-col
-            v-for="item in influencers"
-            :key="item.influencerId"
-            cols="12"
-            sm="12"
-            md="12"
-            lg="12"
-          ></v-col>
-        </v-row> -->
       </template>
     </v-data-iterator>
     <v-dialog

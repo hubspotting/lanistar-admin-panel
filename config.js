@@ -12,7 +12,8 @@ export default {
     { label: 'Didn\'t attend pitch / to be re-booked', value: 2 },
     { label: 'Non contactable / Disappeared', value: 3 },
     { label: 'Contract Signed', value: 4 },
-    { label: 'Contract Not Signed', value: 5 }
+    { label: 'Contract Not Signed', value: 5 },
+    { label: 'Rejected', value: 6 }
   ],
   assignedToCases: [
     { label: 'Not assigned yet', value: 0 },

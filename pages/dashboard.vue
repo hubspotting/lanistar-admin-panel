@@ -35,7 +35,7 @@
         <v-card color="orange" v-on:click="chagenFilterType(9)" :class="filterType == 9 ? 'active': ''">
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="title">Unverified</v-card-title>
+              <v-card-title class="title">Rejected</v-card-title>
               <v-card-text class="card-count">
                 <h1>{{ stats.notverified ? stats.notverified: 0 }}</h1>
               </v-card-text>
@@ -140,7 +140,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-           
+
           <v-card-title v-if="filterType == 1">{{ stats.total ? stats.total: 'No one' }} Registered</v-card-title>
           <v-card-title v-if="filterType == 2">{{ stats.referred ? 'Top Referrers': 'No one Referred' }}</v-card-title>
           <v-card-title v-if="filterType == 3">{{ stats.waiting ? stats.waiting: 'No one' }} Waiting to be contacted</v-card-title>
@@ -279,13 +279,13 @@ export default {
     await this.getInfluencers()
   },
   computed: {
-      
+
     },
   methods: {
     refreshData() {
       this.getDashboardData();
       this.getInfluencers();
-      
+
     },
     callback() {
       this.paginateNum = 1;
@@ -296,13 +296,14 @@ export default {
       this.paginateNum = 1;
       this.getInfluencers();
     },
-    
+
     async getDashboardData() {
       try {
         const url = `${config.msLandingUrl}/influencer/dashboard`;
         const result = await axios.get(url);
         if (result && result.data) {
           this.stats = result.data;
+          console.log(result.data);
         }
       } catch (error) {
         console.log(error)

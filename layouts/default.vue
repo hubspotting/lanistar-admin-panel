@@ -94,7 +94,7 @@
 .tiktok {
   background-color: #1E1E1E;
   border-color: #1E1E1E;
-  
+
 }
 .instagram {
   background-color: #e91e63 !important;
@@ -134,7 +134,17 @@ export default {
           icon: 'mdi-account-switch',
           title: 'Invite Influencer',
           to: '/influencers/invite'
-        }
+        },
+        {
+          icon: 'mdi-alert-circle-check-outline',
+          title: 'Missing Info',
+          to: '/influencers/missing'
+        },
+        // {
+        //   icon: 'mdi-alert-circle-check-outline',
+        //   title: 'Missing Info',
+        //   to: '/influencers/missing'
+        // }
       ],
       icons: {
         instagram: 'mdi-instagram',
@@ -177,20 +187,46 @@ export default {
       this.getSocialData();
     })
     this.getSocialData();
-    this.miniVariant = this.$vuetify.breakpoint.mdAndDown
+    this.miniVariant = this.$vuetify.breakpoint.mdAndDown;
+    this.addUserManagement();
   },
   methods: {
+    async addUserManagement() {
+      if (this.$auth.user.role  === 1) {
+        this.items.push({
+           icon: 'mdi-account-cog-outline',
+           title: 'Manage Admins',
+          to: '/manage/adminManage'
+        });
+      } else if (this.$auth.user.role  === 2) {
+        // this.items.push({
+        //    icon: 'mdi-cog-outline',
+        //    title: 'Change Password',
+        //   to: '/manage/changePassword'
+        // });
+      }
+    },
     async getSocialData() {
       try {
           const url = `${config.msLandingUrl}/influencer/socialfollowers`;
-          const result = await axios.get(url);
+          let options = {
+            user_id: this.$auth.user.id,
+            role: this.$auth.user.role
+          };
+          const result = await axios.post(url, options);
           if (result && result.data) {
-            console.log(result.data);
             this.cards = result.data;
           }
         } catch (error) {
           console.log(error)
         }
+    },
+    async getAdminsList() {
+      try {
+        vm
+      } catch (error) {
+
+      }
     },
     onResize() {
       // this.miniVariant = this.$vuetify.breakpoint.mdAndDown

@@ -12,7 +12,7 @@
       <v-col cols="12" md="3">
         <v-select
         v-model="assignedto"
-        :items="assignedToCases"
+        :items="assignFilterCases"
         item-text="label"
         item-value="value"
         auto-select-first
@@ -32,10 +32,12 @@
     <v-sheet>
       <InfluencerList
         :influencers="influencers"
+        :assignedToCases="assignedToCases"
         :page-number="pageNumber"
         :delete-callback="showDeleteDialog"
         :loading="loading"
         :searchBar=true
+        v-on:dante="refreshData"
       />
       <v-pagination
         v-model="paginateNum"
@@ -111,7 +113,8 @@ export default {
       influencers: [],
       pageNumber: 1,
       deleteId: null,
-      assignedToCases: config.assignFilterCases,
+      assignFilterCases: config.assignFilterCases,
+      assignedToCases: config.assignedToCases,
       assignedto : -1,
       searchClue: '',
       paginateNum: 1,
@@ -119,7 +122,8 @@ export default {
     };
   },
   async mounted() {
-    this.getInfluencers();
+    await this.getAssignUsers();
+    await this.getInfluencers();
   },
   computed: {
     deleteDialog: {
@@ -134,33 +138,39 @@ export default {
     }
   },
   methods: {
+    refreshData() {
+      this.getInfluencers();
+    },
     callback() {
       this.paginateNum = 1;
       this.getInfluencers();
     },
+    async getAssignUsers() {
+      const url = `${config.msLandingUrl}/user/getassginusers`;
+      const result = await axios.get(url);
+      if (result) {
+        this.assignedToCases = config.assignedToCases.concat(result.data);
+        this.assignFilterCases = config.assignFilterCases.concat(result.data);
+      }
+    },
     async getInfluencers() {
-      this.loading = true;
       try {
         const url = `${config.msLandingUrl}/influencer/list`;
-        const result = await axios.get(url, {
-          params: {
+        const result = await axios.post(url, {
             paginateNum: this.paginateNum,
             searchClue: this.searchClue.toLowerCase(),
             assignedto: this.assignedto,
             filter: 1,
-            filter: {
-              deneme: "hede"
-            }
-          }
+            role: this.$auth.user.role,
+            user_id: this.$auth.user.id
         });
-        if (result && result.data) {
+        if (result && result.data) { 
           this.totalPageNum = Math.floor(result.data.count/20) + 1;
           this.influencers = result.data.list;
         }
       } catch (error) {
         console.log(error.response);
       }
-      this.loading = false;
     },
     showDeleteDialog(id) {
       this.deleteId = id;

@@ -13,7 +13,7 @@
     "generate": "nuxt generate",
     "test": "jest",
     "deploy": "aws s3 sync dist s3://inf-admin.iamlanistar.com/ --delete",
-    "clear:cache": "aws cloudfront create-invalidation --distribution-id=E33Q1FHUK5UMGG --paths='/'"
+    "clear:cache": "aws cloudfront create-invalidation --distribution-id=E33Q1FHUK5UMGG --paths=\"/\""
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.0",
@@ -23,6 +23,7 @@
     "@sentry/integrations": "^5.15.0",
     "express": "^4.17.1",
     "nuxt": "^2.0.0",
+    "vue-json-excel": "^0.2.98",
     "vuejs-paginate": "^2.1.0",
     "vuelidate": "^0.7.5",
     "vuetify-datetime-picker": "^2.1.1"
@@ -34,5 +35,8 @@
     "jest": "^24.1.0",
     "rimraf": "^3.0.2",
     "vue-jest": "^4.0.0-0"
+  },
+  "engines": {
+    "node": "13.7.x"
   }
 }

@@ -24,7 +24,8 @@
         :submit-callback="submitCallback"
         :cancel-callback="cancelCallback"
         :loading="loading"
-        :influencer-info="influencerInfo" />
+        :influencer-info="influencerInfo"
+        :createUser="true" />
     </v-sheet>
   </v-layout>
 </template>
@@ -56,7 +57,10 @@ export default {
   },
   methods: {
     async submitCallback(formData) {
-      this.loading = true
+      if (this.$auth.user.role  === 2 ) {
+        formData.assignedto = this.$auth.user.id;
+      }
+      this.loading = true;
       try {
         this.errorSummary = null
         const url = `${config.msLandingUrl}/influencer/create`;
@@ -67,7 +71,7 @@ export default {
           this.$vuetify.goTo(0, {})
           if (result.data.errors) {
             this.errorSummary = parseApiError(result)
-            this.loading = false
+            this.loading = false;
             return;
           }
           this.successMessage = true

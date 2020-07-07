@@ -62,10 +62,26 @@
         </v-card>
       </v-col>
       <v-col cols="12" md="4">
+        <v-card color="blue" dark v-on:click="chagenFilterType(11)" :class="filterType == 11 ? 'active': ''">
+          <div class="d-flex flex-no-wrap justify-space-between">
+            <div>
+              <v-card-title class="title">Contacted/ awaiting response</v-card-title>
+              <v-card-text class="card-count">
+                <h1>{{ stats.responseawaiting ? stats.responseawaiting: 0 }}</h1>
+              </v-card-text>
+            </div>
+            <div class="card-icon d-flex flex-column justify-center align-tems-center">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
         <v-card color="green" dark  v-on:click="chagenFilterType(4)" :class="filterType == 4 ? 'active': ''">
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
-              <v-card-title class="title">Contacted/pitch booked</v-card-title>
+              <v-card-title class="title">Contacted / pitch booked / zoom / hq
+              </v-card-title>
               <v-card-text class="card-count">
                 <h1>{{ stats.contacted ? stats.contacted: 0 }}</h1>
               </v-card-text>
@@ -140,7 +156,6 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-
           <v-card-title v-if="filterType == 1">{{ stats.total ? stats.total: 'No one' }} Registered</v-card-title>
           <v-card-title v-if="filterType == 2">{{ stats.referred ? 'Top Referrers': 'No one Referred' }}</v-card-title>
           <v-card-title v-if="filterType == 3">{{ stats.waiting ? stats.waiting: 'No one' }} Waiting to be contacted</v-card-title>
@@ -158,10 +173,11 @@
                 <label>Search by name</label>
               </div>
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="6">
               <v-select
+              v-if="$auth.user.role === 1"
               v-model="assignedto"
-              :items="assignedToCases"
+              :items="assignFilterCases"
               item-text="label"
               item-value="value"
               auto-select-first
@@ -169,6 +185,15 @@
               class="no-padding"
             ></v-select>
             </v-col>
+            <!-- <v-col cols="12" md="3">
+              <JsonExcel
+                  class = "v-btn v-btn--contained theme--light v-size--large primary"
+                  :field = "excel_fields"
+                  :data = "excel_data"
+                  name = "lanistar-all-influencers.xls">
+                  Download As Exel
+              </JsonExcel>
+            </v-col> -->
           </v-row>
 
           <v-pagination
@@ -182,6 +207,7 @@
             :filterType="filterType"
             :loading="loading"
             :influencers="influencers"
+            :assignedToCases="assignedToCases"
             :items-per-page="10"
             v-on:dante="refreshData"
             :page-number='1' no-header />
@@ -252,14 +278,16 @@
 </style>
 
 <script>
-import axios from '../utils/create-axios'
-import config from '../config'
-import InfluencerList from '../components/InfluencerList'
-import Paginate from 'vuejs-paginate'
+import axios from '../utils/create-axios';
+import config from '../config';
+import InfluencerList from '../components/InfluencerList';
+import Paginate from 'vuejs-paginate';
+import JsonExcel from 'vue-json-excel';
 export default {
   components: {
     InfluencerList,
-    Paginate
+    Paginate,
+    JsonExcel
   },
   data() {
     return {
@@ -270,22 +298,32 @@ export default {
       paginateNum: 1,
       searchClue: '',
       totalPageNum: 0,
-      assignedToCases: config.assignFilterCases,
-      assignedto : -1
+      assignFilterCases: config.assignFilterCases,
+      assignedToCases: config.assignedToCases,
+      assignedto : -1,
+      excel_data: [],
+      excel_fields: {
+        'Name': 'name',
+        'Email': 'email',
+        'Phone Number': 'phonenumber'
+      }
     }
   },
   async mounted() {
-    await this.getDashboardData()
-    await this.getInfluencers()
+    // await this.getAllInfluencers();
+    await this.getDashboardData();
+    await this.getInfluencers();
+    if (this.$auth.user.role === 1) {
+      await this.getAssignUsers();
+    }
   },
   computed: {
 
-    },
+  },
   methods: {
     refreshData() {
       this.getDashboardData();
       this.getInfluencers();
-
     },
     callback() {
       this.paginateNum = 1;
@@ -296,11 +334,37 @@ export default {
       this.paginateNum = 1;
       this.getInfluencers();
     },
+    async getAssignUsers() {
+      const url = `${config.msLandingUrl}/user/getassginusers`;
+      const result = await axios.get(url);
+      if (result) {
+        console.log(result);
+        this.assignedToCases = config.assignedToCases.concat(result.data);
+        this.assignFilterCases = config.assignFilterCases.concat(result.data);
+        console.log(this.assignedToFilterCases);
+      }
+    },
+     async getAllInfluencers() {
+       try {
+         const url  = `${config.msLandingUrl}/influencer/allinfluencers`;
+         const result  = await axios.get(url);
+         if (result && result.data) {
+           this.excel_data = result.data;
+        }
+       } catch (err) {
 
+       }
+    },
     async getDashboardData() {
       try {
         const url = `${config.msLandingUrl}/influencer/dashboard`;
-        const result = await axios.get(url);
+        let options = {
+          // params: {
+            role: this.$auth.user.role,
+            user_id: this.$auth.user.id
+          // }
+        }
+        const result = await axios.post(url, options);
         if (result && result.data) {
           this.stats = result.data;
           console.log(result.data);
@@ -313,15 +377,16 @@ export default {
       try {
         const url = `${config.msLandingUrl}/influencer/list`;
         let options = {
-          params: {
             paginateNum: this.paginateNum,
             filter: this.filterType,
             searchClue: this.searchClue.toLowerCase(),
-            assignedto: this.assignedto
-          }
+            assignedto: this.assignedto,
+            role: this.$auth.user.role,
+            user_id: this.$auth.user.id
         };
-        const result = await axios.get(url, options);
+        const result = await axios.post(url, options);
         if (result && result.data && result.data.list) {
+          console.log(result.data.list);
           this.totalPageNum = Math.floor(result.data.count/20) + 1;
           this.loading = false;
           this.influencers = result.data.list;

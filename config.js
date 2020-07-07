@@ -8,7 +8,9 @@ export default {
       )),
   contractStatuses: [
     { label: 'Waiting to be contacted', value: 0 },
-    { label: 'Contacted / pitch booked', value: 1 },
+    { label: 'Contacted / awaiting response', value: 9 },
+    { label: 'Contacted / Pitch booked / Zoom', value: 7 },
+    { label: 'Contacted / Pitch booked / HQ', value: 8 },
     { label: 'Didn\'t attend pitch / to be re-booked', value: 2 },
     { label: 'Non contactable / Disappeared', value: 3 },
     { label: 'Contract Signed', value: 4 },
@@ -16,20 +18,10 @@ export default {
     { label: 'Rejected', value: 6 }
   ],
   assignedToCases: [
-    { label: 'Not assigned yet', value: 0 },
-    { label: 'Carol', value: 1 },
-    { label: 'Mohanned', value: 2 },
-    { label: 'Amani', value: 3 },
-    { label: 'Melek', value: 4 },
-    { label: 'Jodie', value: 5 }
+    { label: 'Not assigned yet', value: null },
   ],
   assignFilterCases: [
       { label: 'All', value: -1 },
-      { label: 'Not assigned yet', value: 0 },
-      { label: 'Carol', value: 1 },
-      { label: 'Mohanned', value: 2 },
-      { label: 'Amani', value: 3 },
-      { label: 'Melek', value: 4 },
-    { label: 'Jodie', value: 5 }
+      { label: 'Not assigned yet', value: null },
   ]
 };

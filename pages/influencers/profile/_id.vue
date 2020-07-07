@@ -209,6 +209,7 @@
               <div>
                 <influencer-list
                   :influencers="referredInfluencers"
+                  :assignedToCases="assignedToCases"
                   :page-number="1"
                   no-header
                   no-paging
@@ -265,7 +266,8 @@ export default {
       deleteDialog: false,
       id: null,
       influencerInfo: null,
-      referredInfluencers: []
+      referredInfluencers: [],
+      assignedToCases: config.assignedToCases
     };
   },
   // validations: {
@@ -275,6 +277,7 @@ export default {
   //   }
   // },
   async mounted() {
+    await this.getAssignUsers();
     const { id } = this.$route.params
     if (!id) {
       this.warningMessage = 'Influencer id is missing'
@@ -284,6 +287,14 @@ export default {
     this.getInfluencerInfo()
   },
   methods: {
+    async getAssignUsers() {
+      const url = `${config.msLandingUrl}/user/getassginusers`;
+      const result = await axios.get(url);
+      if (result) {
+        console.log(result);
+        this.assignedToCases = config.assignedToCases.concat(result.data);
+      }
+    },
     async getInfluencerInfo() {
       this.loading = true;
       try {
@@ -301,10 +312,10 @@ export default {
     async getReferrals() {
       try {
         const url = `${config.msLandingUrl}/influencer/list`;
-        const result = await axios.get(url, {
-          params: {
-            referredBy: this.influencerInfo.influencerId
-          }
+        const result = await axios.post(url, {
+            referredBy: this.influencerInfo.influencerId,
+            role: this.$auth.user.role,
+            user_id: this.$auth.user.id
         });
         if (result && result.data) {
           this.referredInfluencers = result.data.list;
@@ -376,11 +387,11 @@ export default {
 
         try {
           const url = `${config.msLandingUrl}/influencer/list`;
-          const result = await axios.get(url, {
-            params: {
+          const result = await axios.post(url, {
               searchClue: val.toLowerCase(),
-              autoComplete: true
-            }
+              autoComplete: true,
+              role: this.$auth.user.role,
+              user_id: this.$auth.user.id
           });
           if (result && result.data) {
             this.searchResults = result.data.list;

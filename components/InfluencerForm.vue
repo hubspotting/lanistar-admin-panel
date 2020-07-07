@@ -42,21 +42,16 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="12" md="3">
-          <!-- <v-text-field
-            v-model="this.createdAt"
-            label="Created Date"
-            disabled="true"
-          ></v-text-field> -->
-        <v-datetime-picker label="Select Datetime" v-model="createdAt"
-          dateFormat="dd-MM-yyyy"
-        ></v-datetime-picker>
+        <v-col cols="12" md="3" v-if="!createUser">
+          <v-datetime-picker label="Select Datetime" v-model="createdAt"
+            dateFormat="dd-MM-yyyy"
+          ></v-datetime-picker>
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="3" v-if="$auth.user.role">
           <v-select
             v-model="assignedto"
-            :items="assignedToCases"
+            :items="assignFilterCases"
             item-text="label"
             item-value="value"
             auto-select-first
@@ -79,13 +74,13 @@
         <h3>Status</h3>
       </v-row>
       <v-row>
-        <v-col cols="6">
+        <!-- <v-col cols="6">
           <v-checkbox
             v-model="contractSigned"
             :false-value="false"
             :true-value="true"
             class="mx-2" label="Contract Signed"></v-checkbox>
-        </v-col>
+        </v-col> -->
         <v-col cols="12" md="6">
           <v-select
             v-model="contractStatus"
@@ -96,13 +91,13 @@
             label="Contract status"
           ></v-select>
         </v-col>
-        <v-col cols="6">
+        <!-- <v-col cols="6">
           <v-checkbox
             v-model="notAccepted"
             :false-value="false"
             :true-value="true"
             class="mx-2" label="Not Accepted"></v-checkbox>
-        </v-col>
+        </v-col> -->
 
       </v-row>
 
@@ -308,7 +303,8 @@ export default {
       }
     },
     'loading': Boolean,
-    'influencerInfo': Object
+    'influencerInfo': Object,
+    createUser: Boolean
   },
   data() {
     return {
@@ -317,7 +313,7 @@ export default {
       searchResults: [],
       searchQuery: null,
       contractStatuses: config.contractStatuses,
-      assignedToCases: config.assignedToCases,
+      assignFilterCases: config.assignFilterCases,
       referredByInfo: null,
       influencerId: null,
       firstName: null,
@@ -343,7 +339,7 @@ export default {
       twitter_followers: 0,
       youtube_followers: 0,
       tiktok_followers: 0,
-      assignedto: 0
+      assignedto: ''
     }
   },
   validations: {
@@ -354,12 +350,12 @@ export default {
       required
     },
     email: {
-      required,
+      // required,
       email
     },
     phoneNumber: {
-      required,
-      phoneNumberValidator
+      // required,
+      // phoneNumberValidator
     },
     youtube: {
       url
@@ -368,7 +364,8 @@ export default {
       url
     },
   },
-  mounted() {
+  async mounted() {
+    await this.getAssignUsers();
     if(this.$props.influencerInfo && this.$props.influencerInfo.influencerId) {
       console.log(this.$props.influencerInfo);
       this.influencerId = this.$props.influencerInfo.influencerId
@@ -402,6 +399,14 @@ export default {
     }
   },
   methods: {
+    async getAssignUsers() {
+      const url = `${config.msLandingUrl}/user/getassginusers`;
+      const result = await axios.get(url);
+      if (result) {
+        console.log(result);
+        this.assignFilterCases = config.assignedToCases.concat(result.data);
+      }
+    },
     convertCreatedAt(createdAt) {
       let temp = createdAt.split('T');
       let tempDate = temp[0].split('-');
@@ -446,7 +451,7 @@ export default {
         twitter_followers: Number(this.twitter_followers),
         youtube_followers: Number(this.youtube_followers),
         tiktok_followers: Number(this.tiktok_followers),
-        assignedto: Number(this.assignedto)
+        assignedto: this.assignedto
       });
     },
     handleCancel() {
@@ -482,11 +487,11 @@ export default {
 
         try {
           const url = `${config.msLandingUrl}/influencer/list`;
-          const result = await axios.get(url, {
-            params: {
+          const result = await axios.post(url, {
               searchClue: val.toLowerCase(),
-              autoComplete: true
-            }
+              autoComplete: true,
+              role: this.$auth.user.role,
+              user_id: this.$auth.user.id
           });
           if (result && result.data) {
             this.searchResults = result.data.list;
@@ -512,18 +517,18 @@ export default {
       return errors
     },
     emailErrors() {
-      const errors = []
-      if (!this.$v.email.$dirty) return errors
-      !this.$v.email.email && errors.push('Must be a valid e-mail')
-      !this.$v.email.required && errors.push('Phone number is required')
-      return errors
+      // const errors = []
+      // if (!this.$v.email.$dirty) return errors
+      // !this.$v.email.email && errors.push('Must be a valid e-mail')
+      // !this.$v.email.required && errors.push('Email is required')
+      // return errors
     },
     phoneErrors() {
-      const errors = []
-      if (!this.$v.phoneNumber.$dirty) return errors
-      !this.$v.phoneNumber.phoneNumberValidator && errors.push('Please enter valid phone number')
-      !this.$v.phoneNumber.required && errors.push('Phone number is required')
-      return errors
+      // const errors = []
+      // if (!this.$v.phoneNumber.$dirty) return errors
+      // !this.$v.phoneNumber.phoneNumberValidator && errors.push('Please enter valid phone number')
+      // !this.$v.phoneNumber.required && errors.push('Phone number is required')
+      // return errors
     },
     facebookErrors() {
       const errors = []
